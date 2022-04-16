@@ -1,0 +1,18 @@
+clc
+close all
+clear all
+
+%% let's try the two C(||∆I||) proposed in the wiki
+
+x = linspace(-20,20,1000);
+
+figure 
+hold on
+for k=logspace(-2,1,10)
+    plot(x,C1(x,k),'r')
+    plot(x,C2(x,k),'b')
+    legend('C1','C2')
+end
+
+hold off
+title('testing differe'
