@@ -3,11 +3,11 @@ close all
 clear all
 
 % -------- load img -----------
-img_ref = rescale(double(rgb2gray(imread('scan2.jpeg')))); % divide 255 because imshow only show double of [0,1]
-% img_ref = rescale(double((imread('scan1.jpeg')))); % divide 255 because imshow only show double of [0,1]
+% img_ref = rescale(double(rgb2gray(imread('scan2.jpeg')))); % divide 255 because imshow only show double of [0,1]
+img_ref = rescale(double((imread('scan1.jpeg')))); % divide 255 because imshow only show double of [0,1]
 
 % ----------- add noise -----------
-guassian_noise = rand(size(img_ref))./0.8;
+guassian_noise = rand(size(img_ref))./2;
 img_noised = rescale(img_ref+guassian_noise);
 
 %% ------------ loop ---------------
@@ -15,9 +15,9 @@ img = img_noised;
 
 dx = 15;
 dy = 15;
-dt = 0.01;
-K = 0.2;
-T = 50;
+dt = 0.1;
+K = 1;
+T = 500;
 PSNR_list = zeros(1,T+1);
 PSNR_list(1) = psnr(img_noised, img_ref);
 
@@ -29,7 +29,8 @@ for j = 2:T+1
     iyy = Iyy(img,dy);
     ixy = Ixy(img,dx,dy);
     div_norm = sqrt(ix.^2+iy.^2);
-    it = -2/K.*exp(-(div_norm./K).^2).*(ixx.*(ones(size(img))-(2/K^2).*ix.^2) - (4/K^2).*ix.*iy.*iyy + iyy.*(ones(size(img))-(2/K^2).*iy.^2));
+    
+    it = exp(-(div_norm./K).^2).*(ixx.*(ones(size(img))-ix.^2) - (2).*ix.*iy.*iyy + iyy.*(ones(size(img))-iy.^2));
 
     img = rescale(img + dt.*it);
     
